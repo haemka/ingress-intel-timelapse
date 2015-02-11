@@ -72,7 +72,17 @@ FILE=`date -d "$YESTERDAY" +%s`
 FILEEND=`date -d "$TODAY" +%s`
 
 while [ $FILE -lt $FILEEND ]; do
-	convert ${DIR}/${FILE}.png -fill ${COLOR} -font ${FONT} -pointsize ${FONTSIZE} -annotate ${POSITION} "`date -d @${FILE}`" ${TMP_DIR}/${FILE}.png
+        # it is possible, that the timestamp differs a bit, therefore we need to check if the exact timestamp is correct
+        if [ -e ${DIR}/${FILE}.png ]; then
+                convert ${DIR}/${FILE}.png -fill white -font Coda-Regular -pointsize 92 -annotate +100+4400 "`date -d @${FILE}`" ${TMP_DIR}/${FILE}.png
+        else
+                # and if it is not, we will try some more
+                TRYFILE=${FILE}
+                while [ ! -e ${DIR}/${TRYFILE}.png ]; do
+                        let TRYFILE=TRYFILE+1
+                        convert ${DIR}/${TRYFILE}.png -fill white -font Coda-Regular -pointsize 92 -annotate +100+4400 "`date -d @${FILE}`" ${TMP_DIR}/${TRYFILE}.png
+                done
+        fi
 	let FILE=FILE+600
 done
 
