@@ -80,7 +80,9 @@ while [ $FILE -lt $FILEEND ]; do
                 TRYFILE=${FILE}
                 while [ ! -e ${DIR}/${TRYFILE}.png ]; do
                         let TRYFILE=TRYFILE+1
-                        convert ${DIR}/${TRYFILE}.png -fill white -font Coda-Regular -pointsize 92 -annotate +100+4400 "`date -d @${FILE}`" ${TMP_DIR}/${TRYFILE}.png
+                        if [ -e ${DIR}/${TRYFILE}.png]; then
+                                convert ${DIR}/${TRYFILE}.png -fill white -font Coda-Regular -pointsize 92 -annotate +100+4400 "`date -d @${FILE}`" ${TMP_DIR}/${TRYFILE}.png
+                        fi
                 done
         fi
 	let FILE=FILE+600
